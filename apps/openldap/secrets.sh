@@ -34,15 +34,13 @@ echo ""
 
 read -sp "LDAP Admin Password: " LDAP_ADMIN_PASSWORD
 echo ""
-read -sp "LDAP Config Password: " LDAP_CONFIG_PASSWORD
 echo ""
-read -sp "LDAP Readonly User Password: " LDAP_READONLY_USER_PASSWORD
 echo ""
 echo ""
 
 # Validate passwords are not empty
-if [[ -z "$LDAP_ADMIN_PASSWORD" ]] || [[ -z "$LDAP_CONFIG_PASSWORD" ]] || [[ -z "$LDAP_READONLY_USER_PASSWORD" ]]; then
-    echo -e "${RED}Error: All passwords must be provided${NC}"
+if [[ -z "$LDAP_ADMIN_PASSWORD" ]]; then
+    echo -e "${RED}Error: LDAP Admin password must be provided${NC}"
     exit 1
 fi
 
@@ -59,8 +57,6 @@ metadata:
 type: Opaque
 stringData:
   LDAP_ADMIN_PASSWORD: "$LDAP_ADMIN_PASSWORD"
-  LDAP_CONFIG_PASSWORD: "$LDAP_CONFIG_PASSWORD"
-  LDAP_READONLY_USER_PASSWORD: "$LDAP_READONLY_USER_PASSWORD"
 EOF
 
 # Generate sealed secret
@@ -75,25 +71,19 @@ fi
 # Extract encrypted values using yq or python
 if command -v yq &> /dev/null; then
     ENCRYPTED_ADMIN=$(yq eval '.spec.encryptedData.LDAP_ADMIN_PASSWORD' "$TMP_SEALED")
-    ENCRYPTED_CONFIG=$(yq eval '.spec.encryptedData.LDAP_CONFIG_PASSWORD' "$TMP_SEALED")
-    ENCRYPTED_READONLY=$(yq eval '.spec.encryptedData.LDAP_READONLY_USER_PASSWORD' "$TMP_SEALED")
 elif command -v python3 &> /dev/null; then
     ENCRYPTED_ADMIN=$(python3 -c "import yaml; print(yaml.safe_load(open('$TMP_SEALED'))['spec']['encryptedData']['LDAP_ADMIN_PASSWORD'])")
-    ENCRYPTED_CONFIG=$(python3 -c "import yaml; print(yaml.safe_load(open('$TMP_SEALED'))['spec']['encryptedData']['LDAP_CONFIG_PASSWORD'])")
-    ENCRYPTED_READONLY=$(python3 -c "import yaml; print(yaml.safe_load(open('$TMP_SEALED'))['spec']['encryptedData']['LDAP_READONLY_USER_PASSWORD'])")
 else
     echo -e "${YELLOW}Warning: Neither yq nor python3 found. Using grep/awk fallback${NC}"
     ENCRYPTED_ADMIN=$(grep "LDAP_ADMIN_PASSWORD:" "$TMP_SEALED" | awk '{print $2}')
-    ENCRYPTED_CONFIG=$(grep "LDAP_CONFIG_PASSWORD:" "$TMP_SEALED" | awk '{print $2}')
-    ENCRYPTED_READONLY=$(grep "LDAP_READONLY_USER_PASSWORD:" "$TMP_SEALED" | awk '{print $2}')
 fi
 
 # Cleanup temp files
 rm -f "$TMP_SECRET" "$TMP_SEALED"
 
 # Validate encrypted values
-if [[ -z "$ENCRYPTED_ADMIN" ]] || [[ -z "$ENCRYPTED_CONFIG" ]] || [[ -z "$ENCRYPTED_READONLY" ]]; then
-    echo -e "${RED}Error: Failed to extract encrypted values${NC}"
+if [[ -z "$ENCRYPTED_ADMIN" ]]; then
+    echo -e "${RED}Error: Failed to extract encrypted value${NC}"
     exit 1
 fi
 
@@ -105,12 +95,6 @@ TMP_DEPLOYMENT=$(mktemp)
 # Use sed to replace the encrypted values (handles multi-line values)
 sed -e "/LDAP_ADMIN_PASSWORD:/,/LDAP_CONFIG_PASSWORD:/ {
     s|LDAP_ADMIN_PASSWORD:.*|LDAP_ADMIN_PASSWORD: $ENCRYPTED_ADMIN|
-}" \
-    -e "/LDAP_CONFIG_PASSWORD:/,/LDAP_READONLY_USER_PASSWORD:/ {
-    s|LDAP_CONFIG_PASSWORD:.*|LDAP_CONFIG_PASSWORD: $ENCRYPTED_CONFIG|
-}" \
-    -e "/LDAP_READONLY_USER_PASSWORD:/,/template:/ {
-    s|LDAP_READONLY_USER_PASSWORD:.*|LDAP_READONLY_USER_PASSWORD: $ENCRYPTED_READONLY|
 }" "$DEPLOYMENT_FILE" > "$TMP_DEPLOYMENT"
 
 # Replace the original file

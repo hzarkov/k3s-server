@@ -24,40 +24,16 @@ This directory contains the Kubernetes manifests for deploying OpenLDAP using th
 
 ### Sealed Secrets (Encrypted Secrets in Git)
 
-This deployment uses **Sealed Secrets** to securely store sensitive data in Git. The SealedSecret is encrypted and can only be decrypted by the Sealed Secrets controller running in your cluster.
 
-**Current encrypted secrets:**
-- `LDAP_ADMIN_PASSWORD` - Admin password (currently: "changeme_admin_password")
-- `LDAP_CONFIG_PASSWORD` - Config password (currently: "changeme_config_password")
-- `LDAP_READONLY_USER_PASSWORD` - Read-only user password
+This deployment uses **Sealed Secrets** to securely store the initial admin password in Git. Only the admin password is required and managed.
 
-**To update passwords:**
+**Password management workflow:**
 
-1. Create a new secret file with your desired passwords:
-```bash
-cat > /tmp/openldap-secret.yaml << 'EOF'
-apiVersion: v1
-kind: Secret
-metadata:
-  name: openldap-secrets
-  namespace: openldap
-type: Opaque
-stringData:
-  LDAP_ADMIN_PASSWORD: "your-secure-admin-password"
-  LDAP_CONFIG_PASSWORD: "your-secure-config-password"
-  LDAP_READONLY_USER_PASSWORD: "your-secure-readonly-password"
-EOF
-```
-
-2. Encrypt it using kubeseal:
-```bash
-sudo kubeseal --kubeconfig=/etc/rancher/k3s/k3s.yaml --format=yaml \
-  < /tmp/openldap-secret.yaml > /tmp/sealed-secret.yaml
-```
-
-3. Replace the SealedSecret section in `deployment.yaml` with the new encrypted content
-
-4. Commit and push to Git
+1. Run `secrets.sh` to generate and seal the initial admin password. This updates the SealedSecret in `deployment.yaml`.
+2. Deploy or redeploy OpenLDAP. The admin password from the sealed secret is used only for initial setup or if the persistent data is wiped.
+3. To change the admin password after deployment, use `change-password.sh`. This updates the password directly in the running LDAP server.
+4. The password set with `change-password.sh` will persist as long as the LDAP data volume is not deleted, regardless of the value in `deployment.yaml`.
+5. If you redeploy and wipe the LDAP data, the password from the sealed secret will be used again.
 
 ### Environment Variables (ConfigMap: openldap-env)
 
@@ -68,8 +44,6 @@ sudo kubeseal --kubeconfig=/etc/rancher/k3s/k3s.yaml --format=yaml \
 
 **Security (stored in SealedSecret):**
 - `LDAP_ADMIN_PASSWORD`: Admin password (encrypted in Git)
-- `LDAP_CONFIG_PASSWORD`: Config password (encrypted in Git)
-- `LDAP_READONLY_USER_PASSWORD`: Read-only user password (encrypted in Git)
 
 **TLS Settings:**
 - `LDAP_TLS`: Enable TLS (default: "true")
