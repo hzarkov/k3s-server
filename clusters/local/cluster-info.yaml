@@ -1,0 +1,5 @@
+# Cluster-specific configuration can go here
+# This is optional and can be used for multi-cluster setups
+
+# For now, this is just a placeholder
+# You can add cluster-specific resources here if needed

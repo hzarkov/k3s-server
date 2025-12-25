@@ -1,0 +1,16 @@
+# Ignore sensitive files
+*.key
+*.pem
+*.p12
+secrets/
+
+# Ignore temporary files
+*.tmp
+*.swp
+*~
+.DS_Store
+
+# Ignore IDE files
+.idea/
+.vscode/
+*.iml

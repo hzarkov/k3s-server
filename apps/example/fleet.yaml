@@ -1,0 +1,14 @@
+# Fleet configuration for the example app
+# This file tells Fleet how to deploy this specific application
+
+defaultNamespace: default
+
+# You can add target customizations here
+# targetCustomizations:
+# - name: dev
+#   clusterSelector:
+#     matchLabels:
+#       env: dev
+#   yaml:
+#     overlays:
+#     - deployment-overlay-dev.yaml

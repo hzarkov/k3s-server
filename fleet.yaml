@@ -1,0 +1,25 @@
+# Fleet configuration for this repository
+# This file is optional but can be used to configure how Fleet processes this repo
+
+# Default namespace for resources without a namespace
+defaultNamespace: default
+
+# Helm configuration (if using Helm charts)
+# helm:
+#   releaseName: my-release
+#   chart: ./charts/my-chart
+
+# Target customization based on cluster labels
+# targetCustomizations:
+# - name: production
+#   clusterSelector:
+#     matchLabels:
+#       env: production
+
+# Diff configuration
+diff:
+  comparePatches:
+  - apiVersion: v1
+    kind: Secret
+    operations:
+    - {"op": "remove", "path": "/data"}
