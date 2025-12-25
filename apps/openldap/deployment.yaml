@@ -30,9 +30,9 @@ metadata:
   name: openldap-env
   namespace: openldap
 data:
-  LDAP_ORGANISATION: "Example Organization"
-  LDAP_DOMAIN: "example.com"
-  LDAP_BASE_DN: "dc=example,dc=com"
+  LDAP_ORGANISATION: "HZarkov Space"
+  LDAP_DOMAIN: "hzarkov.space"
+  LDAP_BASE_DN: "dc=hzarkov,dc=space"
   LDAP_READONLY_USER: "false"
   LDAP_RFC2307BIS_SCHEMA: "false"
   LDAP_BACKEND: "mdb"

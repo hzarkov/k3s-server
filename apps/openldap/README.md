@@ -1,16 +1,23 @@
 # OpenLDAP Deployment
 
-This directory contains the Kubernetes manifests for deploying OpenLDAP using the `osixia/openldap` Docker image.
+This directory contains the Kubernetes manifests for deploying OpenLDAP using the `osixia/openldap` Docker image, along with phpLDAPadmin for web-based management.
 
 ## Architecture
 
+### OpenLDAP Server
 - **StatefulSet**: Ensures stable network identity and persistent storage for each pod
 - **Headless Service (openldap)**: Enables direct pod-to-pod communication and DNS resolution
 - **LoadBalancer Service (openldap-lb)**: Exposes LDAP ports 389 and 636 externally
 - **SealedSecret**: Encrypted secrets stored safely in Git (decrypted by the controller at runtime)
 - **PersistentVolumeClaims**: 
-  - `/var/lib/ldap` - LDAP database files
-  - `/etc/ldap/slapd.d` - LDAP configuration files
+  - `/var/lib/ldap` - LDAP database files (1GB)
+  - `/etc/ldap/slapd.d` - LDAP configuration files (256MB)
+- **Domain**: hzarkov.space (dc=hzarkov,dc=space)
+
+### phpLDAPadmin
+- **Deployment**: Web-based LDAP management interface
+- **LoadBalancer Service**: Exposes HTTP (80) and HTTPS (443) ports
+- **Auto-configured**: Connects to the OpenLDAP service automatically
 
 ## Configuration
 
@@ -54,9 +61,9 @@ sudo kubeseal --kubeconfig=/etc/rancher/k3s/k3s.yaml --format=yaml \
 ### Environment Variables (ConfigMap: openldap-env)
 
 **Core Settings:**
-- `LDAP_ORGANISATION`: Organization name (default: "Example Organization")
-- `LDAP_DOMAIN`: LDAP domain (default: "example.com")
-- `LDAP_BASE_DN`: Base DN (default: "dc=example,dc=com")
+- `LDAP_ORGANISATION`: Organization name (default: "HZarkov Space")
+- `LDAP_DOMAIN`: LDAP domain (default: "hzarkov.space")
+- `LDAP_BASE_DN`: Base DN (default: "dc=hzarkov,dc=space")
 
 **Security (stored in SealedSecret):**
 - `LDAP_ADMIN_PASSWORD`: Admin password (encrypted in Git)
@@ -115,10 +122,23 @@ kubectl scale statefulset openldap -n openldap --replicas=3
 
 ## Accessing LDAP
 
+### Web Interface (phpLDAPadmin):
+```bash
+# Get the external IP of the phpLDAPadmin LoadBalancer
+kubectl get svc phpldapadmin -n openldap
+
+# Access in browser
+http://<EXTERNAL-IP>
+```
+
+**Login Credentials:**
+- Login DN: `cn=admin,dc=hzarkov,dc=space`
+- Password: The value you set in the SealedSecret (currently: "changeme_admin_password")
+
 ### From within the cluster:
 ```bash
 # Using the headless service (connects to a specific pod)
-ldap://openldap-0.openldap.openldap.svc.cluster.local:389
+ldap://openldap-0.openldap.svc.cluster.local:389
 
 # Using the load balancer service (round-robin)
 ldap://openldap-lb.openldap.svc.cluster.local:389
@@ -136,17 +156,23 @@ ldaps://<EXTERNAL-IP>:636
 
 ## Testing the Deployment
 
+### Using phpLDAPadmin (Web Interface):
+1. Get the external IP: `kubectl get svc phpldapadmin -n openldap`
+2. Open `http://<EXTERNAL-IP>` in your browser
+3. Login with DN: `cn=admin,dc=hzarkov,dc=space` and your admin password
+4. Create organizational units and users through the GUI
+
+### Using Command Line:
 ```bash
 # Check if LDAP is responding
-kubectl exec -it openldap-0 -n openldap -- ldapsearch -x -H ldap://localhost -b dc=example,dc=com -D "cn=admin,dc=example,dc=com" -w admin
+kubectl exec -it openldap-0 -n openldap -- ldapsearch -x -H ldap://localhost -b dc=hzarkov,dc=space -D "cn=admin,dc=hzarkov,dc=space" -w changeme_admin_password
 
-# Add a test user
-kubectl exec -it openldap-0 -n openldap -- bash
-ldapadd -x -D "cn=admin,dc=example,dc=com" -w admin << EOF
-dn: ou=users,dc=example,dc=com
+# Add a test organizational unit
+kubectl exec -it openldap-0 -n openldap -- bash -c 'ldapadd -x -D "cn=admin,dc=hzarkov,dc=space" -w changeme_admin_password << EOF
+dn: ou=users,dc=hzarkov,dc=space
 objectClass: organizationalUnit
 ou: users
-EOF
+EOF'
 ```
 
 ## Security Recommendations
@@ -163,6 +189,7 @@ EOF
 
 ## Troubleshooting
 
+### OpenLDAP:
 ```bash
 # Check pod status
 kubectl get pods -n openldap
@@ -178,6 +205,18 @@ kubectl get pvc -n openldap
 
 # Access pod shell
 kubectl exec -it openldap-0 -n openldap -- /bin/bash
+```
+
+### phpLDAPadmin:
+```bash
+# Check pod status
+kubectl get pods -n openldap -l app=phpldapadmin
+
+# View logs
+kubectl logs -n openldap -l app=phpldapadmin
+
+# Check service
+kubectl get svc phpldapadmin -n openldap
 ```
 
 ## Backup and Restore
