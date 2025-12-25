@@ -1,0 +1,172 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: openldap
+
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: openldap-secrets
+  namespace: openldap
+spec:
+  encryptedData:
+    LDAP_ADMIN_PASSWORD: AgBpuUNbIvw3Fnf+Fo55781oo7AEC900+PcOUuvUQa22yfUcRrCDZfjqETtVEFfate6HJYqlCEsFhRANebJUIKzJcP6+hVTChTSvya9udapUX3dyttYjuWVzk9eJFdPeDag/CDAsYgaUKpKe0NjRXrnObeqpkZbqL4bCLNhqWKO4+KgFJ20ZRcftLc101JXzTfW3boVIzKIBLKQXlMuVFOIiNkroSmDFKerheNo4QMzMzEnIXi/8QIvGp/CPG2xtzuIuQtXIYlOThgYRjFTZwf4ck1gL66exzT29YADCEXeUnkohXWWC6S72p9P05YVG/ORVel8JrJjFeCgp26dsSTVqmr1qwp9Vxv5RfZfoOyRRdyAi+WozZhpK3A2uz+Nj9aN7xa5COJ6GKu0ZlTP8abby8L/86TPxAQsRIsJ/RVHpdKG53L76etMmk0w7Hm5Cg1w12+hwXI9Iuhdhw1xrzpLF5NK5DVFkPnYnDcAICgGm+1Cy2S/2VzKkMdYjYqs5SeDFGHHXm6IiiEmltweQSmablxKkikRtB7cu2X4C312KRMSAO9ZbH2kXml8kClX24Vpk/O8hIo7d7iKjtlcVp/xLuALi7lWnEnkMwQ7eoo34hWxwcQODfJIPHDQujDZ1qvk2mdnN0BeCG9CxHG5ya+nLQtopQJ1CUwtAaW65jNcVjseHGtIomV1GpA03r1F0swu3bmOXOp/33M6dx1XoAA==
+    LDAP_CONFIG_PASSWORD: AgA9Hwve+XnYMFHTquHEFMKF584Kz7b+u/VXZicwu/eUc97OlAhtUE0kUaGtgU1cRB+E9V1UBjg+5xp3S4iDpnnN58zHQYaO1SkDbrWnNCL4Lgd2BDP8vpO6TXuSxvOLETnxxaEsEcpq08bkNiyQvEDXIi6J1qcC7Ap3BF45KjCC0FTTLZDWmBfJmfoR5umKPd0rL4sBOTC1UAGLXxDCorFTAVfKVND6Ws5tXo1WD/162gBGJSl//bZgwAo2VGroGEj3PUNu9GZYuvmHb06ewV0qKaKJGZMV6NruVCOkbEIt64ptgE7lDh0XjDXDK4L6PRCNrbvNpMHKffFj0Ny86+mH5C1UsaJ0r0w3zdAYZY7SoZ4NCg+zooc6iqyAgWq2xPd5rn9WaHB0mS9LbBjxrw2dJAjyWJxzJvJfuK+s6OQON9DN3j65yMu/g4NY/yfp7qC7k2sTdjLGs3VtXwXOy4goCQaktaro5KZa1ecU9sxVSU0ZPRgPugje00hk5M0ITUH59Q/P30stOcmFEZT4d/XZoXYVyROaOqD5xbPua0XnF6IA9/G5YL3XTJ5fe17qR2tI0oBKYaEJK8OPhsEHjxJTmHF+d/U+xZsvv6N1aarEKftTC+uROYYFPlUJUPKtCd2iCP/Qgl9BOjqjqdp98Eg0eGOiLJTMx6J6XbWu7dJcG7QSlkb8bU7glKv5erwDxejU4A56q0JiQ5jK8rYlGQU=
+    LDAP_READONLY_USER_PASSWORD: AgBwcex0NjNS8TjM3WvXwGm7iOZkGB4cQEHAfRYufT2j8kiEB7u7QNtbcSM4Rpv9MV8UMBoUXPlmJXd8i3PQoGRGLwiGACI9isYdouuuqYCJf6ZI+h85Lg2+WkuvNrWuxMjtyBy8tiGaKf4m9XuqbFi/SRGSZh5hA3zzsosvWJx4cQHsyogKNXJkY5laASPHVjhHVn3rDfXwwIeNlQVasIFSFZGO6DYAIW32VBD8OgNZSLmxEQQ4r1iuYP+IcBbZjcmTMqQadWStkEjKDDswN6aOMAu5TrMQQ1v4c7u/1YJpUxczQbMEgL+IlEV3oYjOEIepBe8fDAOeaJjh5AVJLrHjjmDou8mBdWrSNDJ8G+yZu/3Wv3LQH/n5DowxK0paBL746G0LOUqY5hod7uf5o+/pSZ5a1Yp0twiHmYeS2G6BLgLwVDvFhSYo4shIn2vOSlTR7P0fWcNC4vq+GV/utDU729Rv0U7ceBwNzHyY5qsDzbyfXt2c4Hkg0n7T51nfjMllc4tS49QjZQFsr6LxdDp/3B7AQ1+HNlpmCqm93+QCgPT0vVhTREcR6Xa7Hs9vr8OndmWYaMYWUaUbFTlZ67vJVrbEPLQh7McNmUq8tUDhrook/Eo7bEPN6motrySEeq8AzhoQfnTXpTLPXU604Q/xoOgf54sorfOafYwBE+k9doElPhasu7ftHDyYZhlkepdDZlg3dTvQqeIeH6Px2BHwZg==
+  template:
+    metadata:
+      creationTimestamp: null
+      name: openldap-secrets
+      namespace: openldap
+    type: Opaque
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: openldap-env
+  namespace: openldap
+data:
+  LDAP_ORGANISATION: "Example Organization"
+  LDAP_DOMAIN: "example.com"
+  LDAP_BASE_DN: "dc=example,dc=com"
+  LDAP_READONLY_USER: "false"
+  LDAP_RFC2307BIS_SCHEMA: "false"
+  LDAP_BACKEND: "mdb"
+  LDAP_TLS: "true"
+  LDAP_TLS_CRT_FILENAME: "ldap.crt"
+  LDAP_TLS_KEY_FILENAME: "ldap.key"
+  LDAP_TLS_DH_PARAM_FILENAME: "dhparam.pem"
+  LDAP_TLS_CA_CRT_FILENAME: "ca.crt"
+  LDAP_TLS_ENFORCE: "false"
+  LDAP_TLS_CIPHER_SUITE: "SECURE256:+SECURE128:-VERS-TLS-ALL:+VERS-TLS1.2:-RSA:-DHE-DSS:-CAMELLIA-128-CBC:-CAMELLIA-256-CBC"
+  LDAP_TLS_VERIFY_CLIENT: "demand"
+  LDAP_REPLICATION: "false"
+  KEEP_EXISTING_CONFIG: "false"
+  LDAP_REMOVE_CONFIG_AFTER_SETUP: "true"
+  LDAP_SSL_HELPER_PREFIX: "ldap"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openldap
+  namespace: openldap
+  labels:
+    app: openldap
+spec:
+  type: ClusterIP
+  ports:
+    - name: ldap
+      port: 389
+      targetPort: 389
+      protocol: TCP
+    - name: ldaps
+      port: 636
+      targetPort: 636
+      protocol: TCP
+  selector:
+    app: openldap
+  clusterIP: None  # Headless service for StatefulSet
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openldap-lb
+  namespace: openldap
+  labels:
+    app: openldap
+spec:
+  type: LoadBalancer
+  ports:
+    - name: ldap
+      port: 389
+      targetPort: 389
+      protocol: TCP
+    - name: ldaps
+      port: 636
+      targetPort: 636
+      protocol: TCP
+  selector:
+    app: openldap
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: openldap
+  namespace: openldap
+  labels:
+    app: openldap
+spec:
+  serviceName: openldap
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openldap
+  template:
+    metadata:
+      labels:
+        app: openldap
+    spec:
+      containers:
+      - name: openldap
+        image: osixia/openldap:1.5.0
+        imagePullPolicy: IfNotPresent
+        envFrom:
+        - configMapRef:
+            name: openldap-env
+        - secretRef:
+            name: openldap-secrets
+        ports:
+        - name: ldap
+          containerPort: 389
+          protocol: TCP
+        - name: ldaps
+          containerPort: 636
+          protocol: TCP
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/ldap
+        - name: config
+          mountPath: /etc/ldap/slapd.d
+        livenessProbe:
+          tcpSocket:
+            port: ldap
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          failureThreshold: 10
+        readinessProbe:
+          tcpSocket:
+            port: ldap
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          failureThreshold: 10
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: local-path  # k3s default storage class
+      resources:
+        requests:
+          storage: 1Gi
+  - metadata:
+      name: config
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: local-path
+      resources:
+        requests:
+          storage: 256Mi
