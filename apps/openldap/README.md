@@ -1,10 +1,9 @@
 # OpenLDAP Deployment
 
-This directory contains the Kubernetes manifests for deploying OpenLDAP using the `osixia/openldap` Docker image, along with phpLDAPadmin for web-based management.
+This directory contains the Kubernetes manifests for deploying OpenLDAP using the `osixia/openldap` Docker image.
 
 ## Architecture
 
-### OpenLDAP Server
 - **StatefulSet**: Ensures stable network identity and persistent storage for each pod
 - **Headless Service (openldap)**: Enables direct pod-to-pod communication and DNS resolution
 - **LoadBalancer Service (openldap-lb)**: Exposes LDAP ports 389 and 636 externally
@@ -14,10 +13,11 @@ This directory contains the Kubernetes manifests for deploying OpenLDAP using th
   - `/etc/ldap/slapd.d` - LDAP configuration files (256MB)
 - **Domain**: hzarkov.space (dc=hzarkov,dc=space)
 
-### phpLDAPadmin
-- **Deployment**: Web-based LDAP management interface
-- **LoadBalancer Service**: Exposes HTTP (80) and HTTPS (443) ports
-- **Auto-configured**: Connects to the OpenLDAP service automatically
+## Related Applications
+
+- **phpLDAPadmin**: Web-based LDAP management interface (see [apps/phpldapadmin](../phpldapadmin/README.md))
+  - Deployed as a separate application
+  - Automatically configured to connect to this OpenLDAP server
 
 ## Configuration
 
@@ -123,17 +123,7 @@ kubectl scale statefulset openldap -n openldap --replicas=3
 ## Accessing LDAP
 
 ### Web Interface (phpLDAPadmin):
-```bash
-# Get the external IP of the phpLDAPadmin LoadBalancer
-kubectl get svc phpldapadmin -n openldap
-
-# Access in browser
-http://<EXTERNAL-IP>
-```
-
-**Login Credentials:**
-- Login DN: `cn=admin,dc=hzarkov,dc=space`
-- Password: The value you set in the SealedSecret (currently: "changeme_admin_password")
+For a user-friendly web interface to manage your LDAP server, see the [phpLDAPadmin app](../phpldapadmin/README.md).
 
 ### From within the cluster:
 ```bash
@@ -157,10 +147,7 @@ ldaps://<EXTERNAL-IP>:636
 ## Testing the Deployment
 
 ### Using phpLDAPadmin (Web Interface):
-1. Get the external IP: `kubectl get svc phpldapadmin -n openldap`
-2. Open `http://<EXTERNAL-IP>` in your browser
-3. Login with DN: `cn=admin,dc=hzarkov,dc=space` and your admin password
-4. Create organizational units and users through the GUI
+See the [phpLDAPadmin documentation](../phpldapadmin/README.md) for web-based management.
 
 ### Using Command Line:
 ```bash
@@ -189,7 +176,6 @@ EOF'
 
 ## Troubleshooting
 
-### OpenLDAP:
 ```bash
 # Check pod status
 kubectl get pods -n openldap
@@ -205,18 +191,6 @@ kubectl get pvc -n openldap
 
 # Access pod shell
 kubectl exec -it openldap-0 -n openldap -- /bin/bash
-```
-
-### phpLDAPadmin:
-```bash
-# Check pod status
-kubectl get pods -n openldap -l app=phpldapadmin
-
-# View logs
-kubectl logs -n openldap -l app=phpldapadmin
-
-# Check service
-kubectl get svc phpldapadmin -n openldap
 ```
 
 ## Backup and Restore
