@@ -1,0 +1,173 @@
+apiVersion: fleet.cattle.io/v1alpha1
+kind: GitRepo
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"fleet.cattle.io/v1alpha1","kind":"GitRepo","metadata":{"annotations":{},"name":"k3s-server","namespace":"fleet-local"},"spec":{"branch":"main","clientSecretName":"fleet-git-ssh","insecureSkipTLSVerify":false,"paths":["apps"],"repo":"git@140.82.121.4:hzarkov/k3s-server.git"}}
+  creationTimestamp: "2025-12-25T18:36:11Z"
+  finalizers:
+  - fleet.cattle.io/gitrepo-finalizer
+  generation: 3
+  name: k3s-server
+  namespace: fleet-local
+  resourceVersion: "13922"
+  uid: 6e82cbcc-9174-4012-a4c7-75dbe999014e
+spec:
+  branch: main
+  clientSecretName: fleet-git-ssh
+  paths:
+  - apps
+  repo: git@github.com:hzarkov/k3s-server.git
+status:
+  commit: 6d657d51ad088c7bba07097aa7b5ad7c03148e84
+  conditions:
+  - lastUpdateTime: "2025-12-25T18:49:17Z"
+    status: "True"
+    type: Ready
+  - lastUpdateTime: "2025-12-25T19:44:18Z"
+    message: 'ssh: handshake failed: knownhosts: key is unknown'
+    reason: Error
+    status: "False"
+    type: GitPolling
+  - lastUpdateTime: "2025-12-25T18:36:13Z"
+    status: "False"
+    type: Reconciling
+  - lastUpdateTime: "2025-12-25T19:44:18Z"
+    message: 'ssh: handshake failed: knownhosts: key is unknown'
+    reason: Stalled
+    status: "True"
+    type: Stalled
+  - lastUpdateTime: "2025-12-25T18:36:13Z"
+    status: "True"
+    type: Accepted
+  desiredReadyClusters: 1
+  display:
+    readyBundleDeployments: 3/3
+  gitJobStatus: Current
+  lastPollingTriggered: "2025-12-25T19:44:18Z"
+  observedGeneration: 2
+  perClusterResourceCounts:
+    fleet-local/local:
+      desiredReady: 10
+      missing: 0
+      modified: 0
+      notReady: 0
+      orphaned: 0
+      ready: 10
+      unknown: 0
+      waitApplied: 0
+  pollingCommit: 6d657d51ad088c7bba07097aa7b5ad7c03148e84
+  readyClusters: 1
+  resourceCounts:
+    desiredReady: 10
+    missing: 0
+    modified: 0
+    notReady: 0
+    orphaned: 0
+    ready: 10
+    unknown: 0
+    waitApplied: 0
+  resources:
+  - apiVersion: apps/v1
+    id: default/nginx-example
+    kind: Deployment
+    name: nginx-example
+    namespace: default
+    perClusterState:
+      ready:
+      - fleet-local/local
+    state: Ready
+    type: apps.deployment
+  - apiVersion: apps/v1
+    id: phpldapadmin/phpldapadmin
+    kind: Deployment
+    name: phpldapadmin
+    namespace: phpldapadmin
+    perClusterState:
+      ready:
+      - fleet-local/local
+    state: Ready
+    type: apps.deployment
+  - apiVersion: apps/v1
+    id: openldap/openldap
+    kind: StatefulSet
+    name: openldap
+    namespace: openldap
+    perClusterState:
+      ready:
+      - fleet-local/local
+    state: Ready
+    type: apps.statefulset
+  - apiVersion: bitnami.com/v1alpha1
+    id: openldap/openldap-secrets
+    kind: SealedSecret
+    name: openldap-secrets
+    namespace: openldap
+    perClusterState:
+      ready:
+      - fleet-local/local
+    state: Ready
+    type: bitnami.com.sealedsecret
+  - apiVersion: v1
+    id: openldap/openldap-env
+    kind: ConfigMap
+    name: openldap-env
+    namespace: openldap
+    perClusterState:
+      ready:
+      - fleet-local/local
+    state: Ready
+    type: configmap
+  - apiVersion: v1
+    id: phpldapadmin/phpldapadmin-env
+    kind: ConfigMap
+    name: phpldapadmin-env
+    namespace: phpldapadmin
+    perClusterState:
+      ready:
+      - fleet-local/local
+    state: Ready
+    type: configmap
+  - apiVersion: networking.k8s.io/v1
+    id: phpldapadmin/phpldapadmin
+    kind: Ingress
+    name: phpldapadmin
+    namespace: phpldapadmin
+    perClusterState:
+      ready:
+      - fleet-local/local
+    state: Ready
+    type: networking.k8s.io.ingress
+  - apiVersion: v1
+    id: default/nginx-example
+    kind: Service
+    name: nginx-example
+    namespace: default
+    perClusterState:
+      ready:
+      - fleet-local/local
+    state: Ready
+    type: service
+  - apiVersion: v1
+    id: openldap/openldap
+    kind: Service
+    name: openldap
+    namespace: openldap
+    perClusterState:
+      ready:
+      - fleet-local/local
+    state: Ready
+    type: service
+  - apiVersion: v1
+    id: phpldapadmin/phpldapadmin
+    kind: Service
+    name: phpldapadmin
+    namespace: phpldapadmin
+    perClusterState:
+      ready:
+      - fleet-local/local
+    state: Ready
+    type: service
+  summary:
+    desiredReady: 3
+    ready: 3
