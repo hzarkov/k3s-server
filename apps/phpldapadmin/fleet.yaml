@@ -1,4 +1,4 @@
-defaultNamespace: openldap
+defaultNamespace: phpldapadmin
 
 # Target specific clusters if needed
 # targetCustomizations:
