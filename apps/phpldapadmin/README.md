@@ -9,7 +9,8 @@ phpLDAPadmin provides a user-friendly web interface for managing your OpenLDAP s
 ## Architecture
 
 - **Deployment**: Single replica running osixia/phpldapadmin:0.9.0
-- **LoadBalancer Service**: Exposes HTTP (80) and HTTPS (443) ports externally
+- **ClusterIP Service**: Internal service for pod access
+- **Ingress**: Exposes the service via domain name (ldap.hzarkov.space)
 - **ConfigMap**: Configuration for LDAP server connection
 - **Namespace**: Deployed in the `openldap` namespace
 
@@ -23,14 +24,23 @@ phpLDAPadmin provides a user-friendly web interface for managing your OpenLDAP s
 
 ## Accessing phpLDAPadmin
 
-### Get the External IP:
-```bash
-kubectl get svc phpldapadmin -n openldap
+### Via Domain Name (Recommended):
+```
+http://ldap.hzarkov.space
 ```
 
-### Access in Browser:
-```
-http://<EXTERNAL-IP>
+**Requirements:**
+- Ensure `ldap.hzarkov.space` resolves to your k3s server's IP address
+- Add DNS A record: `ldap.hzarkov.space -> <your-server-ip>`
+- Or add to `/etc/hosts` for testing: `<your-server-ip> ldap.hzarkov.space`
+
+### Via Traefik External IP (Alternative):
+```bash
+# Get Traefik LoadBalancer IP
+kubectl get svc traefik -n kube-system
+
+# Access with Host header
+curl -H "Host: ldap.hzarkov.space" http://<TRAEFIK-IP>
 ```
 
 ### Login Credentials:
@@ -77,9 +87,21 @@ kubectl describe pod -n openldap -l app=phpldapadmin
 
 # Check service
 kubectl get svc phpldapadmin -n openldap
+
+# Check ingress
+kubectl get ingress phpldapadmin -n openldap
+kubectl describe ingress phpldapadmin -n openldap
+
+# Check Traefik status
+kubectl get pods -n kube-system | grep traefik
 ```
 
 ### Common Issues:
+
+**Cannot access via domain name:**
+- Verify DNS resolution: `nslookup ldap.hzarkov.space` or `ping ldap.hzarkov.space`
+- Check Ingress: `kubectl describe ingress phpldapadmin -n openldap`
+- Ensure Traefik is running: `kubectl get pods -n kube-system | grep traefik`
 
 **Cannot connect to LDAP server:**
 - Ensure OpenLDAP pods are running: `kubectl get pods -n openldap -l app=openldap`
@@ -92,8 +114,22 @@ kubectl get svc phpldapadmin -n openldap
 ## Security Recommendations
 
 1. **Use strong passwords**: Update the OpenLDAP admin password via SealedSecret
-2. **Enable HTTPS**: Set `PHPLDAPADMIN_HTTPS: "true"` and provide TLS certificates
-3. **Restrict access**: Use NetworkPolicies or Ingress with authentication
+2. **Enable HTTPS**: Configure TLS/SSL certificates for the Ingress:
+   ```yaml
+   apiVersion: networking.k8s.io/v1
+   kind: Ingress
+   metadata:
+     annotations:
+       traefik.ingress.kubernetes.io/router.entrypoints: websecure
+       traefik.ingress.kubernetes.io/router.tls: "true"
+       cert-manager.io/cluster-issuer: letsencrypt-prod
+   spec:
+     tls:
+     - hosts:
+       - ldap.hzarkov.space
+       secretName: phpldapadmin-tls
+   ```
+3. **Restrict access**: Use NetworkPolicies or Ingress authentication middleware
 4. **Regular updates**: Keep the phpLDAPadmin image updated for security patches
 5. **Audit logs**: Monitor phpLDAPadmin access logs regularly
 

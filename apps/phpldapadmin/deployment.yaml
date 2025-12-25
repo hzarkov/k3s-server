@@ -72,15 +72,34 @@ metadata:
   labels:
     app: phpldapadmin
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - name: http
       port: 80
       targetPort: 80
       protocol: TCP
-    - name: https
-      port: 443
-      targetPort: 443
-      protocol: TCP
   selector:
     app: phpldapadmin
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: phpldapadmin
+  namespace: openldap
+  labels:
+    app: phpldapadmin
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  rules:
+  - host: ldap.hzarkov.space
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: phpldapadmin
+            port:
+              number: 80
