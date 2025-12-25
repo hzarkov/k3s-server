@@ -137,3 +137,24 @@ kubectl get pods -n kube-system | grep traefik
 
 - **OpenLDAP**: phpLDAPadmin requires the OpenLDAP service to be running
 - Service connection: `openldap.openldap.svc.cluster.local:389`
+
+## Custom phpLDAPadmin Image
+
+To build and push a custom phpLDAPadmin image with your XML templates:
+
+1. **Build the image** (from the phpldapadmin directory):
+   ```bash
+   docker build -t <your-registry>:5000/phpldapadmin-custom:latest .
+   ```
+
+2. **Push the image to your private registry**:
+   ```bash
+   docker push <your-registry>:5000/phpldapadmin-custom:latest
+   ```
+
+3. **Update your Kubernetes deployment** to use the custom image:
+   ```yaml
+   image: <your-registry>:5000/phpldapadmin-custom:latest
+   ```
+
+The Dockerfile copies all XML templates from `templates/creation/` into the image. Ensure your templates are in `apps/phpldapadmin/templates/creation/` before building the image.
