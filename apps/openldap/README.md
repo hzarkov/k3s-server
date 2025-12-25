@@ -5,13 +5,14 @@ This directory contains the Kubernetes manifests for deploying OpenLDAP using th
 ## Architecture
 
 - **StatefulSet**: Ensures stable network identity and persistent storage for each pod
-- **Headless Service (openldap)**: Enables direct pod-to-pod communication and DNS resolution
-- **LoadBalancer Service (openldap-lb)**: Exposes LDAP ports 389 and 636 externally
+- **Headless Service (openldap)**: Enables direct pod-to-pod communication and DNS resolution (internal only)
 - **SealedSecret**: Encrypted secrets stored safely in Git (decrypted by the controller at runtime)
 - **PersistentVolumeClaims**: 
   - `/var/lib/ldap` - LDAP database files (1GB)
   - `/etc/ldap/slapd.d` - LDAP configuration files (256MB)
 - **Domain**: hzarkov.space (dc=hzarkov,dc=space)
+
+**Note**: The LDAP server is only accessible within the k3s cluster for security. External access can be added later if needed.
 
 ## Related Applications
 
@@ -130,19 +131,20 @@ For a user-friendly web interface to manage your LDAP server, see the [phpLDAPad
 # Using the headless service (connects to a specific pod)
 ldap://openldap-0.openldap.svc.cluster.local:389
 
-# Using the load balancer service (round-robin)
-ldap://openldap-lb.openldap.svc.cluster.local:389
+# Using the service (round-robin to any pod)
+ldap://openldap.openldap.svc.cluster.local:389
 ```
 
-### From outside the cluster:
+### From your local machine (via port-forward):
 ```bash
-# Get the external IP of the LoadBalancer
-kubectl get svc openldap-lb -n openldap
+# Forward LDAP port to localhost
+kubectl port-forward -n openldap svc/openldap 389:389
 
-# Connect using the external IP
-ldap://<EXTERNAL-IP>:389
-ldaps://<EXTERNAL-IP>:636
+# Then connect to localhost
+ldap://localhost:389
 ```
+
+**Note**: The LDAP server is not exposed externally. Use port-forward or connect from applications running within the cluster.
 
 ## Testing the Deployment
 

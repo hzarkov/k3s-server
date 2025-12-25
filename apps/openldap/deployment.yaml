@@ -73,28 +73,6 @@ spec:
   clusterIP: None  # Headless service for StatefulSet
 
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: openldap-lb
-  namespace: openldap
-  labels:
-    app: openldap
-spec:
-  type: LoadBalancer
-  ports:
-    - name: ldap
-      port: 389
-      targetPort: 389
-      protocol: TCP
-    - name: ldaps
-      port: 636
-      targetPort: 636
-      protocol: TCP
-  selector:
-    app: openldap
-
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
