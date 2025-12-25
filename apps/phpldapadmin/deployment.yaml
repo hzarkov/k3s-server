@@ -4,7 +4,7 @@ kind: ConfigMap
 metadata:
   name: phpldapadmin-env
 data:
-  PHPLDAPADMIN_LDAP_HOSTS: "openldap.openldap.svc.cluster.local"
+  PHPLDAPADMIN_LDAP_HOSTS: "openldap.openldap.svc.cluster.local."
   PHPLDAPADMIN_HTTPS: "false"
   PHPLDAPADMIN_TRUST_PROXY_SSL: "true"
 
@@ -89,7 +89,7 @@ metadata:
     traefik.ingress.kubernetes.io/router.entrypoints: web
 spec:
   rules:
-  - host: ldap.hzarkov.space
+  - host: ldap.hzarkov.bg
     http:
       paths:
       - path: /

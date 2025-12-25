@@ -25,7 +25,7 @@ metadata:
   namespace: openldap
 data:
   LDAP_ORGANISATION: "HZarkov Space"
-  LDAP_DOMAIN: "hzarkov.space"
+  LDAP_DOMAIN: "hzarkov.bg"
   LDAP_BASE_DN: "dc=hzarkov,dc=space"
   LDAP_READONLY_USER: "false"
   LDAP_RFC2307BIS_SCHEMA: "false"

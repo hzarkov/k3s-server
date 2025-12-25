@@ -10,7 +10,7 @@ phpLDAPadmin provides a user-friendly web interface for managing your OpenLDAP s
 
 - **Deployment**: Single replica running osixia/phpldapadmin:0.9.0
 - **ClusterIP Service**: Internal service for pod access
-- **Ingress**: Exposes the service via domain name (ldap.hzarkov.space)
+- **Ingress**: Exposes the service via domain name (ldap.hzarkov.bg)
 - **ConfigMap**: Configuration for LDAP server connection
 - **Namespace**: Deployed in the `openldap` namespace
 
@@ -26,13 +26,13 @@ phpLDAPadmin provides a user-friendly web interface for managing your OpenLDAP s
 
 ### Via Domain Name (Recommended):
 ```
-http://ldap.hzarkov.space
+http://ldap.hzarkov.bg
 ```
 
 **Requirements:**
-- Ensure `ldap.hzarkov.space` resolves to your k3s server's IP address
-- Add DNS A record: `ldap.hzarkov.space -> <your-server-ip>`
-- Or add to `/etc/hosts` for testing: `<your-server-ip> ldap.hzarkov.space`
+- Ensure `ldap.hzarkov.bg` resolves to your k3s server's IP address
+- Add DNS A record: `ldap.hzarkov.bg -> <your-server-ip>`
+- Or add to `/etc/hosts` for testing: `<your-server-ip> ldap.hzarkov.bg`
 
 ### Via Traefik External IP (Alternative):
 ```bash
@@ -40,7 +40,7 @@ http://ldap.hzarkov.space
 kubectl get svc traefik -n kube-system
 
 # Access with Host header
-curl -H "Host: ldap.hzarkov.space" http://<TRAEFIK-IP>
+curl -H "Host: ldap.hzarkov.bg" http://<TRAEFIK-IP>
 ```
 
 ### Login Credentials:
@@ -99,7 +99,7 @@ kubectl get pods -n kube-system | grep traefik
 ### Common Issues:
 
 **Cannot access via domain name:**
-- Verify DNS resolution: `nslookup ldap.hzarkov.space` or `ping ldap.hzarkov.space`
+- Verify DNS resolution: `nslookup ldap.hzarkov.bg` or `ping ldap.hzarkov.bg`
 - Check Ingress: `kubectl describe ingress phpldapadmin -n openldap`
 - Ensure Traefik is running: `kubectl get pods -n kube-system | grep traefik`
 
@@ -126,7 +126,7 @@ kubectl get pods -n kube-system | grep traefik
    spec:
      tls:
      - hosts:
-       - ldap.hzarkov.space
+       - ldap.hzarkov.bg
        secretName: phpldapadmin-tls
    ```
 3. **Restrict access**: Use NetworkPolicies or Ingress authentication middleware

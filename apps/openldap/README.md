@@ -10,7 +10,7 @@ This directory contains the Kubernetes manifests for deploying OpenLDAP using th
 - **PersistentVolumeClaims**: 
   - `/var/lib/ldap` - LDAP database files (1GB)
   - `/etc/ldap/slapd.d` - LDAP configuration files (256MB)
-- **Domain**: hzarkov.space (dc=hzarkov,dc=space)
+- **Domain**: hzarkov.bg (dc=hzarkov,dc=space)
 
 **Note**: The LDAP server is only accessible within the k3s cluster for security. External access can be added later if needed.
 
@@ -63,7 +63,7 @@ sudo kubeseal --kubeconfig=/etc/rancher/k3s/k3s.yaml --format=yaml \
 
 **Core Settings:**
 - `LDAP_ORGANISATION`: Organization name (default: "HZarkov Space")
-- `LDAP_DOMAIN`: LDAP domain (default: "hzarkov.space")
+- `LDAP_DOMAIN`: LDAP domain (default: "hzarkov.bg")
 - `LDAP_BASE_DN`: Base DN (default: "dc=hzarkov,dc=space")
 
 **Security (stored in SealedSecret):**
