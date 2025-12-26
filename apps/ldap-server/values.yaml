@@ -4,7 +4,6 @@ namespace: ldap
 openldap:
   organization: "Hzarkov BG"
   domain: "hzarkov.bg"
-  # ldapBaseDn: "dc=hzarkov,dc=bg"
   tls: "false"
   sealedSecrets:
     adminPassword: "AgAF3wceOBMoTjgPwc8UWLG+1EvMz1MrZHchYzYmv2GGgV0f0+6MJGCvpe3HpV1cVIPnB974y5p+1t+d+fZK0e7GNWs094w8sBiULYfdW4Tc1C6jqLQ6aOWgnjXyTDtmT79NRWfIT5Ddasy/lgTDdQfUWmyhIEGmVz6zl9ZpJUL+U62KhbxAdEpYAGLW2iAbEGdG+tus0N5KRZYKWZv3/X8vEQHKvWP5p/vkABY1E4Ky1BvfGvEdr/SzWzWkaiYGZBxJlR9TPildrVHYC7NCAxQJ7Xt03lB2UjgoNWBqOq7/+bVwWBkK8QTWa9qBKpF3w6cBi7Iv6a7HYIrfRoJkiHRQ99lPgv1Wo6xxU6xoxLqlqT37sAo86cLt0VBRTjvvar/w8iDlGIlzems6gaQORYapn+OzhJgN0xoPcLsCOFZrqWC2Z/0aMdYShuiHQkCJFGoZfDIcAbK4a5A+KZycZeeq6qz5A9NgJO8vYYkaZd1DvI1OvoE/hzps0mpKdOa2uhkPSe/S2uxODdRj5bso81D3dDW/4bUndRpLlIq56Sp3yfLpjtPbwJEvM4OQJMGC3+Ci3X7eUsdqPM8ofy+WPnv4bSGfE5O9VKtFmNbOLd8f8UhBXeFGUPaYA3WmUxIbWgrDJUnXA2/GD9nZpZYIw5Qqi20X8vbFzgHQHnpoSsjLschBla5wOkkBvfQloNxE5WwPUCq2gg=="
