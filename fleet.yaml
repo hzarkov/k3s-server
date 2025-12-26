@@ -2,7 +2,7 @@
 # This file is optional but can be used to configure how Fleet processes this repo
 
 # Default namespace for resources without a namespace
-defaultNamespace: default
+defaultNamespace: fleet-local
 
 # Helm configuration (if using Helm charts)
 # helm:
