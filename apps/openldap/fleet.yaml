@@ -1,8 +1,0 @@
-defaultNamespace: openldap
-
-# Target specific clusters if needed
-# targetCustomizations:
-# - name: local
-#   clusterSelector:
-#     matchLabels:
-#       name: local

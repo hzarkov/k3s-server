@@ -1,0 +1,11 @@
+apiVersion: fleet.cattle.io/v1alpha1
+kind: GitRepo
+metadata:
+  name: ldap-server
+  namespace: fleet-local
+spec:
+  repo: git@github.com:hzarkov/ldap-server.git
+  branch: main
+  paths:
+    - .
+  # Optionally, set clientSecretName, helm options, etc.

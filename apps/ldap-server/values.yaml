@@ -1,0 +1,34 @@
+# Custom values for ldap-server Helm chart (Fleet deployment)
+namespace: ldap
+
+openldap:
+  organization: "Hzarkov BG"
+  domain: "hzarkov.bg"
+  # ldapBaseDn: "dc=hzarkov,dc=bg"
+  tls: "false"
+  sealedSecrets:
+    adminPassword: "AgAF3wceOBMoTjgPwc8UWLG+1EvMz1MrZHchYzYmv2GGgV0f0+6MJGCvpe3HpV1cVIPnB974y5p+1t+d+fZK0e7GNWs094w8sBiULYfdW4Tc1C6jqLQ6aOWgnjXyTDtmT79NRWfIT5Ddasy/lgTDdQfUWmyhIEGmVz6zl9ZpJUL+U62KhbxAdEpYAGLW2iAbEGdG+tus0N5KRZYKWZv3/X8vEQHKvWP5p/vkABY1E4Ky1BvfGvEdr/SzWzWkaiYGZBxJlR9TPildrVHYC7NCAxQJ7Xt03lB2UjgoNWBqOq7/+bVwWBkK8QTWa9qBKpF3w6cBi7Iv6a7HYIrfRoJkiHRQ99lPgv1Wo6xxU6xoxLqlqT37sAo86cLt0VBRTjvvar/w8iDlGIlzems6gaQORYapn+OzhJgN0xoPcLsCOFZrqWC2Z/0aMdYShuiHQkCJFGoZfDIcAbK4a5A+KZycZeeq6qz5A9NgJO8vYYkaZd1DvI1OvoE/hzps0mpKdOa2uhkPSe/S2uxODdRj5bso81D3dDW/4bUndRpLlIq56Sp3yfLpjtPbwJEvM4OQJMGC3+Ci3X7eUsdqPM8ofy+WPnv4bSGfE5O9VKtFmNbOLd8f8UhBXeFGUPaYA3WmUxIbWgrDJUnXA2/GD9nZpZYIw5Qqi20X8vbFzgHQHnpoSsjLschBla5wOkkBvfQloNxE5WwPUCq2gg=="
+
+phpldapadmin:
+  ldap:
+    host: "openldap"
+  service:
+    port: 80
+  ingress:
+    host: "phpldapadmin.example.org"
+    tls: false
+
+# Authentik configuration
+# (add your own values as needed)
+authentik:
+  postgresql:
+    database: "authentik"
+    user: "authentik"
+    persistence:
+      enabled: true
+      size: 8Gi
+  redis:
+    # Add redis custom values if needed
+  sealedSecrets:
+    secretKey: "AgBUl6xXs9DxO2PwmRIOSokOnusgF+RYeclhOrSyRpiVf8K5QFjg5G5vgEvZexCx6edIMthsBClMFb3zJLU7oDY2K4aRAoLN6PhLNuZAZCFkCyuNvnhyF0m3Oc5kzhvMwTNOIG8it6tu7ps9XcvFJMSeRdepM0teO4H+V0XgnZHdyRd0w/AntBjvxpW4+WBdambhy5ADjUd/QCBqncfR1GSchBhma0iwHqgoQ4EH1a5H+TUoCrADRDMJSXa3RDbT4RNX27yLWiM8h5kUd+qbWXGscqQIlNH7mGihVOOAxrbMbVb2N9glgdX8evRUkxId0Li0blCyE8EzXRnWTnEouVOH9kOUYeB9Xdx1dtwSN2xibA9WhKcuYsXzyYKAkYNPUFHqeXsRCsia4xN7DR8DgYLcrmAgSucVBXCCqKs6R6xk7b0fb0grn2HcjS3jbH3fHsnRyS92enbFgBEbVnY1n3Ts5/njwwivWG7umQLApJPuCs7K5vucHJBGbx1lYfN/lI/9CFktfW3rwroMACGg9hWY1wERo6NSqAK12jPfJHGEHs9FGKDtrq2ZHVC8/T1lmU+Zr/zU1i0psOQJ8g0W+mmP2ZF2r7B/lOiihERAC6sv5Ef4C2ZDIuMavYmiMyMlRzBMNXphyW63Db5ZQy98JNBH+3xSXzbVgy1/Py7b8W+iSFBWbk2Bwm1smw9EOSyYSKxqgKeFubtInoOWkg=="
+    postgresqlPassword: "AgCb4JMm2aYnBeljAKHcYRf2IjELUfZHXj+ysFjobmoDMc8eCYy7QLg+ZVym6jhlM/ZONR1FUEf7U549f5s7/kRTkTVWCvlF8Mcx80ZUhdNAL0cJsHTeQ5/vNmGzzS1R01Ei4yfUUNjvjQ/Q9xpX6nJQ0z7w/4gd6EmQnXs1Z6/1kb+wY1eK8dc+FgMql3g1J04evwEfBSIJwgJc4P74SA2yesX160IU2QwDwVwhOreFCHhtwSn3VXakZypz6jnSVW5GwPejpnW0LStlE6Qo8jhydgc9zMCuR3EYA1GM+V/AwNl+CVI1W4NCSaoFL69Hci956FOJbNO45DW/VXyfR2rIXHb0XTBtwpYmP43RXpBC2uGnBmBmE6G4DmrSxmynBXgHgZQTuNw2kgLYLa9wqzvWYi6wPB2HmWZwhh7zAFSlh3HsqFsU3JoFw4JEpK2Pc41rr5+aOqAOhDoPzdmgwEm75vCFnBXMYfGm5OYKs12IQh4sLKII7Bc4Xt4SKJzmsixk3DjozLMtp1ddcl+krGAhZ3XFE/ldenDDEdp/wc9qDnrWXft7U1UFQ5VQ3i5dbSe9AFcw0DQfuzBZRuAen8CYg5eHZ92fm7HIfGQlw4jOYd97lFF+gBpB3dy5wGyp3PkexX/MM1Ep3F65D2Z0AwnqKXTWZIjM+lYyOYWHQc5IxCu9PaWuHOsjpbSyUmxsEzAt7M7DRVSq8gs="

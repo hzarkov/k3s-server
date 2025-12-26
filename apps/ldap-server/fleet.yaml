@@ -1,0 +1,7 @@
+# Fleet resource for deploying ldap-server Helm chart
+helm:
+  chart: .
+  releaseName: ldap-server
+  valuesFiles:
+    - values.yaml
+  # Optionally, set version or other Helm options here
